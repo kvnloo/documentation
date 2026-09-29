@@ -681,6 +681,40 @@ The `dtoverlay` and `dtmerge` utilities have been extended to support the map fi
 
 They both send errors, warnings and any debug output to STDERR.
 
+[[hat-map-file]]
+====== The HAT map file
+
+The firmware can also use a HAT map when selecting Device Tree overlays for known HATs.
+The source file is `hat_map.dts`; it is compiled to `hat_map.dtb` and stored in the
+overlays directory alongside `overlay_map.dtb`.
+
+Each node in the map describes a HAT identity and the overlay selection to use for it.
+Entries can match a HAT by UUID, or by EEPROM identity fields such as `product`,
+`vendor`, and product version (`pver`). The `overlay` property contains the overlay
+selection that the firmware should apply for a matching HAT.
+
+For example:
+
+[source,kotlin]
+----
+/ {
+    iqaudio-pi-codeczero {
+        uuid = [ e15c739c 877d 4e29 ab36 4dc73c21127c ];
+        overlay = "iqaudio-codec";
+    };
+
+    sensehat-v2 {
+        product = "Sense HAT";
+        vendor = "Raspberry Pi";
+        pver = < 0x0002 >;
+        overlay = "rpi-sense-v2";
+    };
+};
+----
+
+The current map is maintained in the Raspberry Pi Linux repository:
+https://github.com/raspberrypi/linux/blob/rpi-6.18.y/arch/arm/boot/dts/overlays/hat_map.dts[hat_map.dts].
+
 [[part2.2.11]]
 ====== Examples
 
